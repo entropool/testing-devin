@@ -5,3 +5,5 @@ deepspeed
 mpi4py
 transformers
 tensorflow==1.15.2
+gputil
+triton
