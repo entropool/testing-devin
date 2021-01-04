@@ -7,3 +7,5 @@ transformers
 tensorflow==1.15.2
 gputil
 triton
+ftfy
+lm_dataformat
