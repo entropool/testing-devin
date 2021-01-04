@@ -28,6 +28,13 @@ def get_all_files(filetype, files_dir):
     return files
 
 
+def extract_tarfile(tarfile_path, extract_dir=None):
+    dataset_tar = tarfile.open(tarfile_path, "r:gz")
+    os.makedirs(extract_dir, exist_ok=True)
+    dataset_tar.extractall(extract_dir)
+    dataset_tar.close()
+
+
 def cycle(loader):
     while True:
         for data in loader:
