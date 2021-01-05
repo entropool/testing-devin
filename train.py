@@ -7,30 +7,17 @@ import deepspeed
 import torch
 from torch.utils.data import DataLoader
 from tqdm.auto import trange
+import torch.distributed as distributed
 
-from gpt_neox import (GPTNeoX, AutoregressiveWrapper, GPT2Dataset,
-                      prepare_optimizer_parameters, get_tokenizer, download_dataset, get_all_files)
+from gpt_neox import (GPTNeoX, AutoregressiveWrapper, GPT2Dataset, extract_tarfile,
+                      prepare_optimizer_parameters, get_tokenizer, download_dataset, get_all_files, is_main, prepare_data)
 
+from gpt_neox.utils import prepare_enwik8_data, get_args, get_params
 
-def get_args():
-    parser = argparse.ArgumentParser(description='GPTNeox Deepspeed Training Script')
-    # Include DeepSpeed configuration arguments
-    parser.add_argument('--model', type=str, default="gpt3_small")
-    parser.add_argument('--local_rank', type=int, default=-1,
-                        help='local rank passed from distributed launcher')
-    parser = deepspeed.add_config_arguments(parser)
-    args = parser.parse_args()
-    return args
-
-
-def get_params(model):
-    model_path = model if model.endswith(".json") else f"./configs/{model}.json"
-    with open(model_path) as f:
-        params = json.load(f)
-    return defaultdict(lambda: None, params)
 
 
 train_args = get_args()
+print("RANK: ", train_args.local_rank)
 params = get_params(train_args.model)
 
 # tokenizer
@@ -55,15 +42,19 @@ model = AutoregressiveWrapper(model)
 dset_params = params["dataset"]
 assert dset_params is not None
 
-download_dataset(dataset=params["name"], dataset_dir=params["dir"])
-files = get_all_files(filetype=params["filetype"], files_dir=params["dir"])
-# TODO: SPLIT?
+torch.distributed.barrier() # barrier will force processes to stop until *all* processes have reached the barrier
+if is_main(train_args):
+    prepare_data(dset_params["name"])
+    torch.distributed.barrier() # barrier will force processes to stop until *all* processes have reached the barrier
+else:
+    torch.distributed.barrier()
 
-train_dataset = GPT2Dataset(files=files,
+train_dataset = GPT2Dataset(glob_pattern=dset_params["train_path"],
                             seq_len=params["seq_len"],
                             train=True,
                             **dset_params)
-eval_dataset = GPT2Dataset(files=files,
+
+eval_dataset = GPT2Dataset(glob_pattern=dset_params["eval_path"],
                            seq_len=params["seq_len"],
                            train=False,
                            **dset_params)

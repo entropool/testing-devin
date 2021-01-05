@@ -4,3 +4,4 @@ from gpt_neox.datasets import TextSamplerDataset, GPT2Dataset
 from gpt_neox.downloader import download_dataset
 from gpt_neox.gpt_neox import GPTNeoX, GPTNeoX_Pipe
 from gpt_neox.utils import *
+from gpt_neox.data_downloader_registry import prepare_data

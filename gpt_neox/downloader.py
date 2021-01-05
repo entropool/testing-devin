@@ -15,8 +15,8 @@ def _download_owt2(dataset_dir):
     output_path = os.path.join(dataset_dir, file_name)
 
     if not os.path.isfile(output_path):
-        os.system('mkdir -p {}'.format(dir))
-        os.system('wget  -O {}'.format(output_path))
+        os.system('mkdir -p {}'.format(dataset_dir))
+        os.system('wget {} -O {}'.format(download_url, output_path))
 
     dataset_tar = tarfile.open(output_path)
     dataset_tar.extractall(dataset_dir)
