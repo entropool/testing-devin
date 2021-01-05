@@ -1,8 +1,5 @@
-import gzip
 import os
 import tarfile
-import numpy as np
-import torch
 import argparse
 import deepspeed
 import json
