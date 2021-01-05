@@ -52,7 +52,7 @@ else:
     torch.distributed.barrier()
 
 # prepare enwik8 data
-data_train, data_val = read_enwik8_data(dset_params["data_path"])
+data_train, data_val = read_enwik8_data(dset_params["path"])
 train_dataset = TextSamplerDataset(data_train, params["seq_len"])
 val_dataset = TextSamplerDataset(data_val, params["seq_len"])
 val_loader = cycle(DataLoader(val_dataset, batch_size=params["batch_size"]))
