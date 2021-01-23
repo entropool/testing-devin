@@ -9,4 +9,3 @@ gputil
 triton
 ftfy
 lm_dataformat
-GPUtil
