@@ -12,8 +12,6 @@ from gpt_neox import (GPTNeoX, AutoregressiveWrapper, GPT2Dataset, extract_tarfi
 
 from gpt_neox.utils import get_args, get_params
 
-import GPUtil
-
 train_args = get_args()
 params = get_params(train_args.model)
 
