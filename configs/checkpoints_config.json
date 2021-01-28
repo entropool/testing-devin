@@ -1,26 +1,20 @@
 {
     "train_batch_size": 1280,
-    "train_micro_batch_size_per_gpu": 8,
     "gradient_accumulation_steps": 80,
     "gradient_clipping": 1.0,
     "wall_clock_breakdown": true,
+    "zero_allow_untested_optimizer": true,
     "tensorboard": {
       "enabled": true,
       "output_path": "./logs",
       "job_name": "gptneox"
     },
     "optimizer": {
-      "type": "Adam",
+      "type": "OneBitAdam",
       "params": {
-        "lr": 0.001,
-        "betas": [
-          0.8,
-          0.999
-        ],
-        "eps": 1e-8,
-        "weight_decay": 3e-7,
-        "freeze_step": 2,
-        "cuda-aware": true
+        "lr": 2e-4,
+    "freeze_step":2,
+    "cuda_aware":true
       }
     },
     "scheduler": {
@@ -36,11 +30,10 @@
     },
     "zero_optimization": {
       "stage": 1,
-      "contiguous_gradients": true,
-      "cpu_offload": false,
-      "overlap_comm": false
+      "contiguous_gradients" : true,
+      "cpu_offload": false
     },
-    "activation_checkpointing": {
+      "activation_checkpointing": {
       "partition_activations": true,
       "cpu_checkpointing": false,
       "contiguous_memory_optimization": false,
@@ -48,4 +41,5 @@
       "synchronize_checkpoint_boundary": false,
       "profile": false
     }
+
 }
