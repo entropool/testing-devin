@@ -48,6 +48,8 @@ def call_gpt_neox(theme):
             words.append(line.split(': ')[-1])
 
     if not spangram or not words:
+        # Log the generated text for debugging purposes
+        print("Generated text:", generated_text)
         raise ValueError("Failed to extract spangram or words from the generated text")
 
     return {"spangram": spangram, "words": words}
