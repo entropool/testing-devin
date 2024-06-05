@@ -31,21 +31,23 @@ def generate_board(words, spangram, m, n):
 def call_gpt_neox(theme):
     # Use Hugging Face transformers pipeline for text generation
     generator = pipeline('text-generation', model='gpt2')
-    prompt = f"Generate a theme and a list of 6 to 8 words aligning with the theme '{theme}'. They should clearly and often cleverly relate to the theme, but not be too easy to guess. One of these words, which we call a spangram, must be longer (but can be two words), with a length of at least 8 characters, and must describe more specifically each of the other words."
+    prompt = f"Generate a theme and a list of 6 to 8 words aligning with the theme '{theme}'. They should clearly and often cleverly relate to the theme, but not be too easy to guess. One of these words, which we call a spangram, must be longer (but can be two words), with a length of at least 8 characters, and must describe more specifically each of the other words. Provide the spangram and words in the following format: Spangram: <spangram>, Words: <word1>, <word2>, <word3>, <word4>, <word5>, <word6>."
     response = generator(prompt, max_length=100, num_return_sequences=1)
     generated_text = response[0]['generated_text']
 
     # Extract spangram and words from the generated text
-    # This is a placeholder extraction logic and should be updated based on the actual format of the generated text
-    lines = generated_text.split('\n')
     spangram = None
     words = []
 
-    for line in lines:
-        if 'spangram' in line.lower():
-            spangram = line.split(': ')[-1]
-        elif ':' in line:
-            words.append(line.split(': ')[-1])
+    # Use regular expressions to extract the spangram and words
+    import re
+    spangram_match = re.search(r'Spangram: (.*?),', generated_text)
+    words_match = re.search(r'Words: (.*)', generated_text)
+
+    if spangram_match:
+        spangram = spangram_match.group(1)
+    if words_match:
+        words = words_match.group(1).split(', ')
 
     if not spangram or not words:
         # Log the generated text for debugging purposes
