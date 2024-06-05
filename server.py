@@ -38,8 +38,17 @@ def call_gpt_neox(theme):
     # Extract spangram and words from the generated text
     # This is a placeholder extraction logic and should be updated based on the actual format of the generated text
     lines = generated_text.split('\n')
-    spangram = lines[0].split(': ')[1]
-    words = [line.split(': ')[1] for line in lines[1:]]
+    spangram = None
+    words = []
+
+    for line in lines:
+        if 'spangram' in line.lower():
+            spangram = line.split(': ')[-1]
+        elif ':' in line:
+            words.append(line.split(': ')[-1])
+
+    if not spangram or not words:
+        raise ValueError("Failed to extract spangram or words from the generated text")
 
     return {"spangram": spangram, "words": words}
 
@@ -53,9 +62,10 @@ def generate_word_set():
     if not theme or not m or not n:
         return jsonify({'error': 'Missing required parameters'}), 400
 
-    gpt_response = call_gpt_neox(theme)
-    if not gpt_response:
-        return jsonify({'error': 'Failed to generate words from GPT-NeoX'}), 500
+    try:
+        gpt_response = call_gpt_neox(theme)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
     spangram = gpt_response.get('spangram')
     words = gpt_response.get('words')
