@@ -69,6 +69,8 @@ def generate_word_set():
     try:
         gpt_response = call_gpt_neox(theme)
     except Exception as e:
+        # Log the error and generated text for debugging purposes
+        print(f"Error: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
     spangram = gpt_response.get('spangram')
