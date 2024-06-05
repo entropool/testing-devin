@@ -1,10 +1,15 @@
 from flask import Flask, jsonify, request
 import random
 from transformers import pipeline
+import re
 
 app = Flask(__name__)
 
 def generate_board(words, spangram, m, n):
+    # Validate that the spangram can fit within the board dimensions
+    if len(spangram) > n:
+        raise ValueError("Spangram length exceeds board width")
+
     board = [['' for _ in range(n)] for _ in range(m)]
 
     # Place the spangram on the board
@@ -28,31 +33,33 @@ def generate_board(words, spangram, m, n):
 
     return board
 
-def call_gpt_neox(theme):
+def call_gpt_neox(theme, n):
     # Use Hugging Face transformers pipeline for text generation
     generator = pipeline('text-generation', model='gpt2')
     prompt = f"Generate a theme and a list of 6 to 8 words aligning with the theme '{theme}'. They should clearly and often cleverly relate to the theme, but not be too easy to guess. One of these words, which we call a spangram, must be longer (but can be two words), with a length of at least 8 characters, and must describe more specifically each of the other words. Provide the spangram and words in the following format: Spangram: <spangram>, Words: <word1>, <word2>, <word3>, <word4>, <word5>, <word6>."
-    response = generator(prompt, max_length=100, num_return_sequences=1)
-    generated_text = response[0]['generated_text']
 
-    # Extract spangram and words from the generated text
-    spangram = None
-    words = []
+    while True:
+        response = generator(prompt, max_length=150, num_return_sequences=1)
+        generated_text = response[0]['generated_text']
 
-    # Use regular expressions to extract the spangram and words
-    import re
-    spangram_match = re.search(r'Spangram: (.*?),', generated_text)
-    words_match = re.search(r'Words: (.*)', generated_text)
+        # Extract spangram and words from the generated text
+        spangram = None
+        words = []
 
-    if spangram_match:
-        spangram = spangram_match.group(1)
-    if words_match:
-        words = words_match.group(1).split(', ')
+        # Use regular expressions to extract the spangram and words
+        spangram_match = re.search(r'Spangram: (.*?),', generated_text)
+        words_match = re.search(r'Words: (.*)', generated_text)
 
-    if not spangram or not words:
+        if spangram_match:
+            spangram = spangram_match.group(1)
+        if words_match:
+            words = words_match.group(1).split(', ')
+
+        if spangram and words and len(spangram) <= n:
+            break
+
         # Log the generated text for debugging purposes
-        print("Generated text:", generated_text)
-        raise ValueError("Failed to extract spangram or words from the generated text")
+        print("Generated text did not meet criteria, regenerating:", generated_text)
 
     return {"spangram": spangram, "words": words}
 
@@ -67,7 +74,7 @@ def generate_word_set():
         return jsonify({'error': 'Missing required parameters'}), 400
 
     try:
-        gpt_response = call_gpt_neox(theme)
+        gpt_response = call_gpt_neox(theme, n)
     except Exception as e:
         # Log the error and generated text for debugging purposes
         print(f"Error: {str(e)}")
@@ -79,7 +86,11 @@ def generate_word_set():
     if not spangram or not words:
         return jsonify({'error': 'Invalid response from GPT-NeoX'}), 500
 
-    board = generate_board(words, spangram, m, n)
+    try:
+        board = generate_board(words, spangram, m, n)
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 500
+
     return jsonify({'theme': theme, 'spangram': spangram, 'board': board})
 
 if __name__ == '__main__':
