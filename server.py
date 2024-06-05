@@ -38,7 +38,10 @@ def call_gpt_neox(theme, n):
     generator = pipeline('text-generation', model='gpt2')
     prompt = f"Generate a theme and a list of 6 to 8 words aligning with the theme '{theme}'. They should clearly and often cleverly relate to the theme, but not be too easy to guess. One of these words, which we call a spangram, must be longer (but can be two words), with a length of at least 8 characters, and must describe more specifically each of the other words. Provide the spangram and words in the following format: Spangram: <spangram>, Words: <word1>, <word2>, <word3>, <word4>, <word5>, <word6>."
 
-    while True:
+    max_attempts = 5
+    attempts = 0
+
+    while attempts < max_attempts:
         response = generator(prompt, max_length=150, num_return_sequences=1)
         generated_text = response[0]['generated_text']
 
@@ -60,6 +63,10 @@ def call_gpt_neox(theme, n):
 
         # Log the generated text for debugging purposes
         print("Generated text did not meet criteria, regenerating:", generated_text)
+        attempts += 1
+
+    if attempts == max_attempts:
+        raise ValueError("Failed to generate valid word set after multiple attempts")
 
     return {"spangram": spangram, "words": words}
 
