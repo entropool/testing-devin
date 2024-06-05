@@ -58,11 +58,15 @@ def call_gpt_neox(theme, n):
         if words_match:
             words = words_match.group(1).split(', ')
 
+        # Log the generated text and extracted values for debugging purposes
+        print(f"Attempt {attempts + 1}:")
+        print("Generated text:", generated_text)
+        print("Extracted spangram:", spangram)
+        print("Extracted words:", words)
+
         if spangram and words and len(spangram) <= n:
             break
 
-        # Log the generated text for debugging purposes
-        print("Generated text did not meet criteria, regenerating:", generated_text)
         attempts += 1
 
     if attempts == max_attempts:
