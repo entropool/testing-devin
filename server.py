@@ -48,13 +48,8 @@ def call_gpt_neox(theme, n):
         "Generate a spangram and a list of 6 to 8 words related to the theme. "
         "The spangram must be a single word or a hyphenated word with at least 8 characters. "
         "Provide the spangram and words in the following format: "
-        "Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
-        "Do not include placeholders like <spangram> or <word1>. "
-        "Example: Theme: All atwitter, Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
-        "Example: Theme: Noodle on this one, Spangram: Pasta Shapes, Words: Elbow, Spiral, Shell, Tube, Ribbon, Bowtie, Wheel. "
-        "Example: Theme: Home grown, Spangram: Herb Garden, Words: Basil, Rosemary, Parsley, Sage, Thyme, Coriander. "
-        "Example: Theme: At the bar, Spangram: Menu Items, Words: Window, Files, Favorites, Tools, History, Edit. "
-        "Example: Theme: Fowl fairy tale, Spangram: Ugly Duckling, Words: Journey, Misfit, Swan, Beautiful, Reflection."
+        "Spangram: [spangram], Words: [word1], [word2], [word3], [word4], [word5], [word6]. "
+        "Do not include placeholders like [spangram] or [word1]."
     )
 
     max_attempts = 5
@@ -63,8 +58,11 @@ def call_gpt_neox(theme, n):
 
     while attempts < max_attempts:
         try:
-            response = generator(prompt, max_new_tokens=150, num_return_sequences=1, temperature=0.6, top_p=0.95)
+            response = generator(prompt, max_new_tokens=200, num_return_sequences=1, temperature=0.7, top_p=0.9)
             generated_text = response[0]['generated_text']
+
+            # Log the full response for debugging purposes
+            log_to_file(f"Full response: {response}")
 
             # Adjusted regular expressions to correctly capture the generated spangram and words
             spangram_match = re.search(r'Spangram:\s*([A-Za-z-]+)', generated_text)
