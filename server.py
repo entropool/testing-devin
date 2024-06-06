@@ -49,7 +49,7 @@ def call_gpt_neox(theme, n):
     attempts = 0
 
     while attempts < max_attempts:
-        response = generator(prompt, max_length=150, num_return_sequences=1)
+        response = generator(prompt, max_length=250, max_new_tokens=100, num_return_sequences=1)
         generated_text = response[0]['generated_text']
 
         # Extract spangram and words from the generated text
