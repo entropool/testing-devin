@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 import random
 from transformers import pipeline
 import re
+import torch
 
 app = Flask(__name__)
 
@@ -40,30 +41,28 @@ def log_to_file(message):
 
 def call_gpt_neox(theme, n):
     # Use Hugging Face transformers pipeline for text generation
-    generator = pipeline('text-generation', model='gpt2')
+    generator = pipeline('text-generation', model='meta-llama/Meta-Llama-3-8B-Instruct', model_kwargs={"torch_dtype": torch.bfloat16}, device_map="auto")
+    # Refined prompt to be more explicit and clear
     prompt = (
         f"Theme: {theme}\n"
-        "Generate a theme and a list of 6 to 8 words aligning with the theme. "
-        "One of these words, which we call a spangram, must be longer (but can be two words), with a length of at least 8 characters, "
-        "and must describe more specifically each of the other words. "
+        "Generate a spangram and a list of 6 to 8 words related to the theme. "
+        "The spangram must be a single word or a hyphenated word with at least 8 characters. "
         "Provide the spangram and words in the following format: "
         "Spangram: [spangram], Words: [word1], [word2], [word3], [word4], [word5], [word6]. "
-        "Ensure the spangram and words are clearly separated by commas and follow the exact format provided. "
-        "Example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
         "Do not include placeholders like [spangram] or [word1] in the output. "
-        "The spangram should be a single word or a hyphenated word, and each word should be unique and relevant to the theme."
+        "Example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle."
     )
 
     max_attempts = 5
     attempts = 0
 
     while attempts < max_attempts:
-        response = generator(prompt, max_length=300, num_return_sequences=1, temperature=0.9, max_new_tokens=100, truncation=True)
+        response = generator(prompt, max_new_tokens=100, num_return_sequences=1, temperature=0.7, top_p=0.9)
         generated_text = response[0]['generated_text']
 
-        # Extract spangram and words from the generated text
-        spangram_match = re.search(r'Spangram:\s*([\w\s-]+)', generated_text)
-        words_match = re.search(r'Words:\s*([\w\s,-]+)', generated_text)
+        # Adjusted regular expressions to correctly capture the generated spangram and words
+        spangram_match = re.search(r'Spangram:\s*([A-Za-z\s-]+)', generated_text)
+        words_match = re.search(r'Words:\s*([A-Za-z\s,-]+)', generated_text)
         spangram = None
         words = []
         if spangram_match:
@@ -89,32 +88,40 @@ def call_gpt_neox(theme, n):
 
 @app.route('/generate_word_set', methods=['POST'])
 def generate_word_set():
+    log_to_file("Received request for /generate_word_set endpoint")
     data = request.json
     theme = data.get('theme')
     m = data.get('m')
     n = data.get('n')
 
+    log_to_file(f"Extracted parameters - Theme: {theme}, m: {m}, n: {n}")
+
     if not theme or not m or not n:
+        log_to_file("Error: Missing required parameters")
         return jsonify({'error': 'Missing required parameters'}), 400
 
     try:
+        log_to_file("Calling call_gpt_neox function")
         gpt_response = call_gpt_neox(theme, n)
     except Exception as e:
-        # Log the error and generated text for debugging purposes
-        print(f"Error: {str(e)}")
+        log_to_file(f"Error in call_gpt_neox: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
     spangram = gpt_response.get('spangram')
     words = gpt_response.get('words')
 
     if not spangram or not words:
+        log_to_file("Error: Invalid response from GPT-NeoX")
         return jsonify({'error': 'Invalid response from GPT-NeoX'}), 500
 
     try:
+        log_to_file("Calling generate_board function")
         board = generate_board(words, spangram, m, n)
     except ValueError as e:
+        log_to_file(f"Error in generate_board: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
+    log_to_file("Successfully generated response")
     return jsonify({'theme': theme, 'spangram': spangram, 'board': board})
 
 if __name__ == '__main__':
