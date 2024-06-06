@@ -49,7 +49,7 @@ def call_gpt_neox(theme, n):
         "Spangram: <spangram>, Words: <word1>, <word2>, <word3>, <word4>, <word5>, <word6>. "
         "For example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
         "Ensure the spangram and words are clearly separated by commas and follow the exact format provided. "
-        "Do not include any additional text or punctuation."
+        "Do not include any additional text or punctuation. Generate new and unique words each time."
     )
 
     max_attempts = 5
