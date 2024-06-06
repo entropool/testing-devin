@@ -33,6 +33,11 @@ def generate_board(words, spangram, m, n):
 
     return board
 
+# Function to log messages to a file
+def log_to_file(message):
+    with open('/home/ubuntu/testing-devin/gpt-neox/flask_server.log', 'a') as log_file:
+        log_file.write(message + '\n')
+
 def call_gpt_neox(theme, n):
     # Use Hugging Face transformers pipeline for text generation
     generator = pipeline('text-generation', model='gpt2')
@@ -65,10 +70,10 @@ def call_gpt_neox(theme, n):
             words = [word.strip() for word in words_match.group(1).split(',')]
 
         # Log the generated text and extracted values for debugging purposes
-        print(f"Attempt {attempts + 1}:")
-        print("Generated text:", generated_text)
-        print("Extracted spangram:", spangram)
-        print("Extracted words:", words)
+        log_to_file(f"Attempt {attempts + 1}:")
+        log_to_file("Generated text: " + generated_text)
+        log_to_file("Extracted spangram: " + str(spangram))
+        log_to_file("Extracted words: " + str(words))
 
         if spangram and words and len(spangram) <= n:
             break
