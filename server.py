@@ -53,18 +53,19 @@ def call_gpt_neox(theme, n):
     attempts = 0
 
     while attempts < max_attempts:
-        response = generator(prompt, max_length=200, num_return_sequences=1, temperature=0.9)
+        response = generator(prompt, max_length=300, num_return_sequences=1, temperature=0.9, max_new_tokens=100)
         generated_text = response[0]['generated_text']
 
         # Extract spangram and words from the generated text
         spangram_match = re.search(r'Spangram:\s*([\w\s]+)[,.]', generated_text)
         words_match = re.search(r'Words:\s*([\w\s,]+)[,.]', generated_text)
         spangram = None
+        words = []
         if spangram_match:
             spangram = spangram_match.group(1).strip()
         if words_match:
             words = [word.strip() for word in words_match.group(1).split(',') if word.strip()]
-        words = []
+
         # Log the generated text and extracted values for debugging purposes
         log_to_file(f"Attempt {attempts + 1}:")
         log_to_file("Generated text: " + generated_text)
@@ -73,12 +74,12 @@ def call_gpt_neox(theme, n):
 
         if spangram and words and len(spangram) <= n:
             break
-        # Use refined regular expressions to extract the spangram and words
+
         attempts += 1
-        spangram_match = re.search(r'Spangram:\s*([\w\s]+)[,.]', generated_text)
+
     if attempts == max_attempts:
         raise ValueError("Failed to generate valid word set after multiple attempts")
-        words_match = re.search(r'Words:\s*([\w\s,]+)[,.]', generated_text)
+
     return {"spangram": spangram, "words": words}
 
 @app.route('/generate_word_set', methods=['POST'])
