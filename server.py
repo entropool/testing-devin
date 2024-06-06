@@ -51,7 +51,10 @@ def call_gpt_neox(theme, n):
         "Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
         "Do not include placeholders like <spangram> or <word1>. "
         "Example: Theme: All atwitter, Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
-        "Example: Theme: Noodle on this one, Spangram: Pasta Shapes, Words: Elbow, Spiral, Shell, Tube, Ribbon, Bowtie, Wheel."
+        "Example: Theme: Noodle on this one, Spangram: Pasta Shapes, Words: Elbow, Spiral, Shell, Tube, Ribbon, Bowtie, Wheel. "
+        "Example: Theme: Home grown, Spangram: Herb Garden, Words: Basil, Rosemary, Parsley, Sage, Thyme, Coriander. "
+        "Example: Theme: At the bar, Spangram: Menu Items, Words: Window, Files, Favorites, Tools, History, Edit. "
+        "Example: Theme: Fowl fairy tale, Spangram: Ugly Duckling, Words: Journey, Misfit, Swan, Beautiful, Reflection."
     )
 
     max_attempts = 5
