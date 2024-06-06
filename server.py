@@ -40,8 +40,15 @@ def log_to_file(message):
         log_file.write(message + '\n')
 
 def call_gpt_neox(theme, n):
-    # Use Hugging Face transformers pipeline for text generation
-    generator = pipeline('text-generation', model='meta-llama/Meta-Llama-3-8B-Instruct', model_kwargs={"torch_dtype": torch.bfloat16}, device_map="auto")
+    # Use Hugging Face transformers for text generation
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    from accelerate import dispatch_model, disk_offload
+
+    model_name = 'EleutherAI/gpt-neox-20b'
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", torch_dtype="auto", low_cpu_mem_usage=True)
+    disk_offload(model, offload_folder="/tmp/model_offload")
+
     # Refined prompt to be more explicit and clear
     prompt = (
         f"Theme: {theme}\n"
@@ -49,35 +56,48 @@ def call_gpt_neox(theme, n):
         "The spangram must be a single word or a hyphenated word with at least 8 characters. "
         "Provide the spangram and words in the following format: "
         "Spangram: [spangram], Words: [word1], [word2], [word3], [word4], [word5], [word6]. "
-        "Do not include placeholders like [spangram] or [word1] in the output. "
-        "Example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle."
+        "Do not include placeholders like [spangram] or [word1]."
     )
 
     max_attempts = 5
     attempts = 0
+    generated_text = ""
 
     while attempts < max_attempts:
-        response = generator(prompt, max_new_tokens=100, num_return_sequences=1, temperature=0.7, top_p=0.9)
-        generated_text = response[0]['generated_text']
+        try:
+            # Encode the prompt using the tokenizer
+            inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
 
-        # Adjusted regular expressions to correctly capture the generated spangram and words
-        spangram_match = re.search(r'Spangram:\s*([A-Za-z\s-]+)', generated_text)
-        words_match = re.search(r'Words:\s*([A-Za-z\s,-]+)', generated_text)
-        spangram = None
-        words = []
-        if spangram_match:
-            spangram = spangram_match.group(1).strip()
-        if words_match:
-            words = [word.strip() for word in words_match.group(1).split(',') if word.strip()]
+            # Generate the response using the model
+            outputs = model.generate(inputs["input_ids"], max_new_tokens=200, temperature=0.7, top_p=0.9)
 
-        # Log the generated text and extracted values for debugging purposes
-        log_to_file(f"Attempt {attempts + 1}:")
-        log_to_file("Generated text: " + generated_text)
-        log_to_file("Extracted spangram: " + str(spangram))
-        log_to_file("Extracted words: " + str(words))
+            # Decode the generated response using the tokenizer
+            generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-        if spangram and words and len(spangram) <= n:
-            break
+            # Log the full response for debugging purposes
+            log_to_file(f"Full response: {generated_text}")
+
+            # Adjusted regular expressions to correctly capture the generated spangram and words
+            spangram_match = re.search(r'Spangram:\s*([A-Za-z-]+)', generated_text)
+            words_match = re.search(r'Words:\s*([A-Za-z,\s]+)', generated_text)
+            spangram = None
+            words = []
+            if spangram_match:
+                spangram = spangram_match.group(1).strip()
+            if words_match:
+                words = [word.strip() for word in words_match.group(1).split(',') if word.strip()]
+
+            # Log the generated text and extracted values for debugging purposes
+            log_to_file(f"Attempt {attempts + 1}:")
+            log_to_file("Generated text: " + generated_text)
+            log_to_file("Extracted spangram: " + str(spangram))
+            log_to_file("Extracted words: " + str(words))
+
+            if spangram and words and len(spangram) <= n:
+                break
+        except Exception as e:
+            log_to_file(f"Error during generation attempt {attempts + 1}: {str(e)}")
+            log_to_file("Generated text: " + generated_text)
 
         attempts += 1
 
