@@ -43,15 +43,13 @@ def call_gpt_neox(theme, n):
     generator = pipeline('text-generation', model='gpt2')
     prompt = (
         f"Theme: {theme}\n"
-        "Generate a theme and a list of 6 to 8 words aligning with the theme. "
-        "One of these words, which we call a spangram, must be longer (but can be two words), with a length of at least 8 characters, "
-        "and must describe more specifically each of the other words. "
+        "Generate a spangram and a list of 6 to 8 words related to the theme. "
+        "The spangram must be a single word or a hyphenated word with at least 8 characters. "
         "Provide the spangram and words in the following format: "
-        "Spangram: [spangram], Words: [word1], [word2], [word3], [word4], [word5], [word6]. "
-        "Ensure the spangram and words are clearly separated by commas and follow the exact format provided. "
-        "Example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
-        "Do not include placeholders like [spangram] or [word1] in the output. "
-        "The spangram should be a single word or a hyphenated word, and each word should be unique and relevant to the theme."
+        "Spangram: <spangram>, Words: <word1>, <word2>, <word3>, <word4>, <word5>, <word6>. "
+        "Do not include placeholders like <spangram> or <word1> in the output. "
+        "Ensure that the spangram and words are actual words related to the theme. "
+        "Example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle."
     )
 
     max_attempts = 5
@@ -62,8 +60,8 @@ def call_gpt_neox(theme, n):
         generated_text = response[0]['generated_text']
 
         # Extract spangram and words from the generated text
-        spangram_match = re.search(r'Spangram:\s*([\w\s-]+)', generated_text)
-        words_match = re.search(r'Words:\s*([\w\s,-]+)', generated_text)
+        spangram_match = re.search(r'Spangram:\s*<([A-Za-z\s-]+)>', generated_text)
+        words_match = re.search(r'Words:\s*<([A-Za-z\s,-]+)>', generated_text)
         spangram = None
         words = []
         if spangram_match:
