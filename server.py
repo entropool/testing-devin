@@ -47,10 +47,10 @@ def call_gpt_neox(theme, n):
         "One of these words, which we call a spangram, must be longer (but can be two words), with a length of at least 8 characters, "
         "and must describe more specifically each of the other words. "
         "Provide the spangram and words in the following format: "
-        "Spangram: <spangram>, Words: <word1>, <word2>, <word3>, <word4>, <word5>, <word6>. "
+        "Spangram: [spangram], Words: [word1], [word2], [word3], [word4], [word5], [word6]. "
         "Ensure the spangram and words are clearly separated by commas and follow the exact format provided. "
         "Example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
-        "Do not include placeholders like <spangram> or <word1> in the output. "
+        "Do not include placeholders like [spangram] or [word1] in the output. "
         "The spangram should be a single word or a hyphenated word, and each word should be unique and relevant to the theme."
     )
 
