@@ -43,12 +43,10 @@ def call_gpt_neox(theme, n):
     generator = pipeline('text-generation', model='gpt2')
     prompt = (
         f"Generate a theme and a list of 6 to 8 words aligning with the theme '{theme}'. "
-        "They should clearly and often cleverly relate to the theme, but not be too easy to guess. "
         "One of these words, which we call a spangram, must be longer (but can be two words), with a length of at least 8 characters, "
         "and must describe more specifically each of the other words. Provide the spangram and words in the following format: "
         "Spangram: <spangram>, Words: <word1>, <word2>, <word3>, <word4>, <word5>, <word6>. "
-        "Ensure the spangram and words are clearly separated by commas and follow the exact format provided. "
-        "Do not include any additional text or punctuation. Generate new and unique words each time."
+        "Ensure the spangram and words are clearly separated by commas and follow the exact format provided."
     )
 
     max_attempts = 5
