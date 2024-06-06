@@ -58,8 +58,8 @@ def call_gpt_neox(theme, n):
         generated_text = response[0]['generated_text']
 
         # Extract spangram and words from the generated text
-        spangram_match = re.search(r'Spangram:\s*\[(.*?)\]', generated_text)
-        words_match = re.search(r'Words:\s*\[(.*?)\]', generated_text)
+        spangram_match = re.search(r'Spangram:\s*(\w+)', generated_text)
+        words_match = re.search(r'Words:\s*([\w\s,]+)', generated_text)
         spangram = None
         words = []
         if spangram_match:
