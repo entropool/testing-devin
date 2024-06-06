@@ -41,24 +41,24 @@ def log_to_file(message):
 def call_gpt_neox(theme, n):
     # Use Hugging Face transformers pipeline for text generation
     generator = pipeline('text-generation', model='meta-llama/Meta-Llama-3-8B-Instruct', model_kwargs={"torch_dtype": torch.bfloat16}, device_map="auto")
+    # Refined prompt to be more directive and clear
     prompt = (
         f"Theme: {theme}\n"
         "Generate a spangram and a list of 6 to 8 words related to the theme. "
         "The spangram must be a single word or a hyphenated word with at least 8 characters. "
         "Provide the spangram and words in the following format: "
         "Spangram: [spangram], Words: [word1], [word2], [word3], [word4], [word5], [word6]. "
-        "Do not include placeholders like [spangram] or [word1] in the output. "
-        "Example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle."
+        "Do not include placeholders like [spangram] or [word1] in the output."
     )
 
     max_attempts = 5
     attempts = 0
 
     while attempts < max_attempts:
-        response = generator(prompt, max_new_tokens=256, num_return_sequences=1, temperature=0.6, top_p=0.9, truncation=True)
+        response = generator(prompt, max_new_tokens=200, num_return_sequences=1, temperature=0.8, top_p=0.9, truncation=True)
         generated_text = response[0]['generated_text']
 
-        # Extract spangram and words from the generated text
+        # Adjusted regular expressions to correctly capture the generated spangram and words
         spangram_match = re.search(r'Spangram:\s*([A-Za-z\s-]+)', generated_text)
         words_match = re.search(r'Words:\s*([A-Za-z\s,-]+)', generated_text)
         spangram = None
