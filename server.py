@@ -49,14 +49,15 @@ def call_gpt_neox(theme, n):
         "The spangram must be a single word or a hyphenated word with at least 8 characters. "
         "Provide the spangram and words in the following format: "
         "Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
-        "Ensure that the spangram and words are actual words and not placeholders."
+        "Ensure that the spangram and words are actual words and not placeholders. "
+        "Do not include any special characters or numbers."
     )
 
     max_attempts = 5
     attempts = 0
 
     while attempts < max_attempts:
-        response = generator(prompt, max_new_tokens=100, num_return_sequences=1, temperature=0.7, top_p=0.9)
+        response = generator(prompt, max_new_tokens=150, num_return_sequences=1, temperature=0.8, top_p=0.95)
         generated_text = response[0]['generated_text']
 
         # Adjusted regular expressions to correctly capture the generated spangram and words
