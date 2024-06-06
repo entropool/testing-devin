@@ -44,7 +44,7 @@ def call_gpt_neox(theme, n):
     generator = pipeline(
         'text-generation',
         model='EleutherAI/gpt-neox-20b',
-        model_kwargs={"torch_dtype": torch.bfloat16, "low_cpu_mem_usage": True, "device_map": "auto"}
+        model_kwargs={"torch_dtype": torch.bfloat16, "low_cpu_mem_usage": True, "device_map": "auto", "disk_offload": True}
     )
     # Refined prompt to be more explicit and clear
     prompt = (
