@@ -40,12 +40,14 @@ def log_to_file(message):
         log_file.write(message + '\n')
 
 def call_gpt_neox(theme, n):
-    # Use Hugging Face transformers pipeline for text generation
-    generator = pipeline(
-        'text-generation',
-        model='EleutherAI/gpt-neox-20b',
-        model_kwargs={"torch_dtype": torch.bfloat16, "low_cpu_mem_usage": True, "device_map": "auto", "disk_offload": True}
-    )
+    # Use Hugging Face transformers for text generation
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    from accelerate import dispatch_model, disk_offload
+
+    model_name = 'EleutherAI/gpt-neox-20b'
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", torch_dtype="auto", low_cpu_mem_usage=True)
+
     # Refined prompt to be more explicit and clear
     prompt = (
         f"Theme: {theme}\n"
@@ -62,11 +64,17 @@ def call_gpt_neox(theme, n):
 
     while attempts < max_attempts:
         try:
-            response = generator(prompt, max_new_tokens=200, num_return_sequences=1, temperature=0.7, top_p=0.9)
-            generated_text = response[0]['generated_text']
+            # Encode the prompt using the tokenizer
+            inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+
+            # Generate the response using the model
+            outputs = model.generate(inputs["input_ids"], max_new_tokens=200, temperature=0.7, top_p=0.9)
+
+            # Decode the generated response using the tokenizer
+            generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
             # Log the full response for debugging purposes
-            log_to_file(f"Full response: {response}")
+            log_to_file(f"Full response: {generated_text}")
 
             # Adjusted regular expressions to correctly capture the generated spangram and words
             spangram_match = re.search(r'Spangram:\s*([A-Za-z-]+)', generated_text)
