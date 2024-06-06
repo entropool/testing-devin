@@ -52,7 +52,6 @@ def call_gpt_neox(theme, n):
         "Do not include placeholders like <spangram> or <word1>. "
         "Example: Theme: All atwitter, Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
         "Example: Theme: Noodle on this one, Spangram: Pasta Shapes, Words: Elbow, Spiral, Shell, Tube, Ribbon, Bowtie, Wheel."
-        "Example: Theme: Noodle on this one, Spangram: Pasta Shapes, Words: Elbow, Spiral, Shell, Tube, Ribbon, Bowtie, Wheel."
     )
 
     max_attempts = 5
@@ -61,7 +60,7 @@ def call_gpt_neox(theme, n):
 
     while attempts < max_attempts:
         try:
-            response = generator(prompt, max_new_tokens=100, num_return_sequences=1, temperature=0.7, top_p=0.9)
+            response = generator(prompt, max_new_tokens=150, num_return_sequences=1, temperature=0.6, top_p=0.95)
             generated_text = response[0]['generated_text']
 
             # Adjusted regular expressions to correctly capture the generated spangram and words
