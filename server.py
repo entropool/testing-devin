@@ -45,14 +45,15 @@ def call_gpt_neox(theme, n):
     # Refined prompt to be more explicit and clear
     prompt = (
         f"Theme: {theme}\n"
-        "Generate a spangram and a list of 6 to 8 words related to the theme. "
+        "You are a creative assistant. Generate a spangram and a list of 6 to 8 words related to the theme. "
         "The spangram must be a single word or a hyphenated word with at least 8 characters. "
         "Provide the spangram and words in the following format: "
         "Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
         "Ensure that the spangram and words are actual words and not placeholders. "
         "Do not include any special characters, numbers, or placeholders like <spangram> or <word1>. "
         "Example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
-        "Generate the spangram and words directly without any placeholders or formatting artifacts."
+        "Generate the spangram and words directly without any placeholders or formatting artifacts. "
+        "Make sure the spangram and words are relevant to the theme and are real words."
     )
 
     max_attempts = 5
@@ -60,7 +61,7 @@ def call_gpt_neox(theme, n):
 
     while attempts < max_attempts:
         try:
-            response = generator(prompt, max_new_tokens=100, num_return_sequences=1, temperature=0.7, top_p=0.9)
+            response = generator(prompt, max_new_tokens=100, num_return_sequences=1, temperature=0.6, top_p=0.95)
             generated_text = response[0]['generated_text']
 
             # Adjusted regular expressions to correctly capture the generated spangram and words
