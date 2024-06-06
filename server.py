@@ -65,7 +65,7 @@ def call_gpt_neox(theme, n):
 
             # Adjusted regular expressions to correctly capture the generated spangram and words
             spangram_match = re.search(r'Spangram:\s*([A-Za-z-]+)', generated_text)
-            words_match = re.search(r'Words:\s*([A-Za-z,-]+)', generated_text)
+            words_match = re.search(r'Words:\s*([A-Za-z,\s]+)', generated_text)
             spangram = None
             words = []
             if spangram_match:
