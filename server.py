@@ -47,6 +47,7 @@ def call_gpt_neox(theme, n):
     model_name = 'EleutherAI/gpt-neox-20b'
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", torch_dtype="auto", low_cpu_mem_usage=True)
+    disk_offload(model, offload_folder="/tmp/model_offload")
 
     # Refined prompt to be more explicit and clear
     prompt = (
