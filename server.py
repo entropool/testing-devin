@@ -41,7 +41,7 @@ def log_to_file(message):
 
 def call_gpt_neox(theme, n):
     # Use Hugging Face transformers pipeline for text generation
-    generator = pipeline('text-generation', model='meta-llama/Meta-Llama-3-8B-Instruct', model_kwargs={"torch_dtype": torch.bfloat16}, device_map="auto")
+    generator = pipeline('text-generation', model='EleutherAI/gpt-neox-20b', model_kwargs={"torch_dtype": torch.bfloat16}, device_map="auto")
     # Refined prompt to be more explicit and clear
     prompt = (
         f"Theme: {theme}\n"
