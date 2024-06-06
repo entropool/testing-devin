@@ -88,32 +88,40 @@ def call_gpt_neox(theme, n):
 
 @app.route('/generate_word_set', methods=['POST'])
 def generate_word_set():
+    log_to_file("Received request for /generate_word_set endpoint")
     data = request.json
     theme = data.get('theme')
     m = data.get('m')
     n = data.get('n')
 
+    log_to_file(f"Extracted parameters - Theme: {theme}, m: {m}, n: {n}")
+
     if not theme or not m or not n:
+        log_to_file("Error: Missing required parameters")
         return jsonify({'error': 'Missing required parameters'}), 400
 
     try:
+        log_to_file("Calling call_gpt_neox function")
         gpt_response = call_gpt_neox(theme, n)
     except Exception as e:
-        # Log the error and generated text for debugging purposes
-        print(f"Error: {str(e)}")
+        log_to_file(f"Error in call_gpt_neox: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
     spangram = gpt_response.get('spangram')
     words = gpt_response.get('words')
 
     if not spangram or not words:
+        log_to_file("Error: Invalid response from GPT-NeoX")
         return jsonify({'error': 'Invalid response from GPT-NeoX'}), 500
 
     try:
+        log_to_file("Calling generate_board function")
         board = generate_board(words, spangram, m, n)
     except ValueError as e:
+        log_to_file(f"Error in generate_board: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
+    log_to_file("Successfully generated response")
     return jsonify({'theme': theme, 'spangram': spangram, 'board': board})
 
 if __name__ == '__main__':
