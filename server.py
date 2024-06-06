@@ -33,43 +33,49 @@ def generate_board(words, spangram, m, n):
 
     return board
 
+# Function to log messages to a file
+def log_to_file(message):
+    with open('/home/ubuntu/testing-devin/gpt-neox/flask_server.log', 'a') as log_file:
+        log_file.write(message + '\n')
+
 def call_gpt_neox(theme, n):
     # Use Hugging Face transformers pipeline for text generation
     generator = pipeline('text-generation', model='gpt2')
     prompt = (
-        f"Generate a theme and a list of 6 to 8 words aligning with the theme '{theme}'. "
-        "They should clearly and often cleverly relate to the theme, but not be too easy to guess. "
+        f"Theme: {theme}\n"
+        "Generate a theme and a list of 6 to 8 words aligning with the theme. "
         "One of these words, which we call a spangram, must be longer (but can be two words), with a length of at least 8 characters, "
-        "and must describe more specifically each of the other words. Provide the spangram and words in the following format: "
-        "Spangram: <spangram>, Words: <word1>, <word2>, <word3>, <word4>, <word5>, <word6>. "
-        "Here is an example: Theme: All atwitter, Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle."
+        "and must describe more specifically each of the other words. "
+        "Provide the spangram and words in the following format: "
+        "Spangram: [spangram], Words: [word1], [word2], [word3], [word4], [word5], [word6]. "
+        "Ensure the spangram and words are clearly separated by commas and follow the exact format provided. "
+        "Example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
+        "Do not include placeholders like [spangram] or [word1] in the output. "
+        "The spangram should be a single word or a hyphenated word, and each word should be unique and relevant to the theme."
     )
 
     max_attempts = 5
     attempts = 0
 
     while attempts < max_attempts:
-        response = generator(prompt, max_length=150, num_return_sequences=1)
+        response = generator(prompt, max_length=300, num_return_sequences=1, temperature=0.9, max_new_tokens=100, truncation=True)
         generated_text = response[0]['generated_text']
 
         # Extract spangram and words from the generated text
+        spangram_match = re.search(r'Spangram:\s*([\w\s-]+)', generated_text)
+        words_match = re.search(r'Words:\s*([\w\s,-]+)', generated_text)
         spangram = None
         words = []
-
-        # Use regular expressions to extract the spangram and words
-        spangram_match = re.search(r'Spangram: ([\w\s]+),', generated_text)
-        words_match = re.search(r'Words: ([\w\s,]+)', generated_text)
-
         if spangram_match:
             spangram = spangram_match.group(1).strip()
         if words_match:
-            words = [word.strip() for word in words_match.group(1).split(',')]
+            words = [word.strip() for word in words_match.group(1).split(',') if word.strip()]
 
         # Log the generated text and extracted values for debugging purposes
-        print(f"Attempt {attempts + 1}:")
-        print("Generated text:", generated_text)
-        print("Extracted spangram:", spangram)
-        print("Extracted words:", words)
+        log_to_file(f"Attempt {attempts + 1}:")
+        log_to_file("Generated text: " + generated_text)
+        log_to_file("Extracted spangram: " + str(spangram))
+        log_to_file("Extracted words: " + str(words))
 
         if spangram and words and len(spangram) <= n:
             break
