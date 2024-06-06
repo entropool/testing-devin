@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 import random
 from transformers import pipeline
 import re
+import torch
 
 app = Flask(__name__)
 
