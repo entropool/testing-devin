@@ -47,7 +47,6 @@ def call_gpt_neox(theme, n):
         "One of these words, which we call a spangram, must be longer (but can be two words), with a length of at least 8 characters, "
         "and must describe more specifically each of the other words. Provide the spangram and words in the following format: "
         "Spangram: <spangram>, Words: <word1>, <word2>, <word3>, <word4>, <word5>, <word6>. "
-        "For example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
         "Ensure the spangram and words are clearly separated by commas and follow the exact format provided. "
         "Do not include any additional text or punctuation. Generate new and unique words each time."
     )
@@ -56,7 +55,7 @@ def call_gpt_neox(theme, n):
     attempts = 0
 
     while attempts < max_attempts:
-        response = generator(prompt, max_length=250, max_new_tokens=100, num_return_sequences=1)
+        response = generator(prompt, max_length=250, max_new_tokens=100, num_return_sequences=1, temperature=0.9)
         generated_text = response[0]['generated_text']
 
         # Extract spangram and words from the generated text
