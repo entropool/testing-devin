@@ -50,34 +50,40 @@ def call_gpt_neox(theme, n):
         "Provide the spangram and words in the following format: "
         "Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
         "Ensure that the spangram and words are actual words and not placeholders. "
-        "Do not include any special characters or numbers."
+        "Do not include any special characters or numbers. "
+        "Do not include placeholders like <spangram> or <word1>. "
+        "Example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
+        "Please generate the spangram and words directly without any placeholders or formatting artifacts."
     )
 
     max_attempts = 5
     attempts = 0
 
     while attempts < max_attempts:
-        response = generator(prompt, max_new_tokens=150, num_return_sequences=1, temperature=0.8, top_p=0.95)
-        generated_text = response[0]['generated_text']
+        try:
+            response = generator(prompt, max_new_tokens=100, num_return_sequences=1, temperature=0.7, top_p=0.9)
+            generated_text = response[0]['generated_text']
 
-        # Adjusted regular expressions to correctly capture the generated spangram and words
-        spangram_match = re.search(r'Spangram:\s*([A-Za-z\s-]+)', generated_text)
-        words_match = re.search(r'Words:\s*([A-Za-z\s,-]+)', generated_text)
-        spangram = None
-        words = []
-        if spangram_match:
-            spangram = spangram_match.group(1).strip()
-        if words_match:
-            words = [word.strip() for word in words_match.group(1).split(',') if word.strip()]
+            # Adjusted regular expressions to correctly capture the generated spangram and words
+            spangram_match = re.search(r'Spangram:\s*([A-Za-z\s-]+)', generated_text)
+            words_match = re.search(r'Words:\s*([A-Za-z\s,-]+)', generated_text)
+            spangram = None
+            words = []
+            if spangram_match:
+                spangram = spangram_match.group(1).strip()
+            if words_match:
+                words = [word.strip() for word in words_match.group(1).split(',') if word.strip()]
 
-        # Log the generated text and extracted values for debugging purposes
-        log_to_file(f"Attempt {attempts + 1}:")
-        log_to_file("Generated text: " + generated_text)
-        log_to_file("Extracted spangram: " + str(spangram))
-        log_to_file("Extracted words: " + str(words))
+            # Log the generated text and extracted values for debugging purposes
+            log_to_file(f"Attempt {attempts + 1}:")
+            log_to_file("Generated text: " + generated_text)
+            log_to_file("Extracted spangram: " + str(spangram))
+            log_to_file("Extracted words: " + str(words))
 
-        if spangram and words and len(spangram) <= n:
-            break
+            if spangram and words and len(spangram) <= n:
+                break
+        except Exception as e:
+            log_to_file(f"Error during generation attempt {attempts + 1}: {str(e)}")
 
         attempts += 1
 
