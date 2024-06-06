@@ -58,6 +58,7 @@ def call_gpt_neox(theme, n):
 
     max_attempts = 5
     attempts = 0
+    generated_text = ""
 
     while attempts < max_attempts:
         try:
@@ -84,6 +85,7 @@ def call_gpt_neox(theme, n):
                 break
         except Exception as e:
             log_to_file(f"Error during generation attempt {attempts + 1}: {str(e)}")
+            log_to_file("Generated text: " + generated_text)
 
         attempts += 1
 
