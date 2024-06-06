@@ -42,7 +42,7 @@ def log_to_file(message):
 def call_gpt_neox(theme, n):
     # Use Hugging Face transformers pipeline for text generation
     generator = pipeline('text-generation', model='meta-llama/Meta-Llama-3-8B-Instruct', model_kwargs={"torch_dtype": torch.bfloat16}, device_map="auto")
-    # Refined prompt to be more directive and clear
+    # Refined prompt to be more explicit and clear
     prompt = (
         f"Theme: {theme}\n"
         "Generate a spangram and a list of 6 to 8 words related to the theme. "
@@ -57,7 +57,7 @@ def call_gpt_neox(theme, n):
     attempts = 0
 
     while attempts < max_attempts:
-        response = generator(prompt, max_new_tokens=200, num_return_sequences=1, temperature=0.7, top_p=0.9)
+        response = generator(prompt, max_new_tokens=100, num_return_sequences=1, temperature=0.7, top_p=0.9)
         generated_text = response[0]['generated_text']
 
         # Adjusted regular expressions to correctly capture the generated spangram and words
