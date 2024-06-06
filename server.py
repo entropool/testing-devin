@@ -50,10 +50,9 @@ def call_gpt_neox(theme, n):
         "Provide the spangram and words in the following format: "
         "Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
         "Ensure that the spangram and words are actual words and not placeholders. "
-        "Do not include any special characters or numbers. "
-        "Do not include placeholders like <spangram> or <word1>. "
+        "Do not include any special characters, numbers, or placeholders like <spangram> or <word1>. "
         "Example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
-        "Please generate the spangram and words directly without any placeholders or formatting artifacts."
+        "Generate the spangram and words directly without any placeholders or formatting artifacts."
     )
 
     max_attempts = 5
@@ -65,8 +64,8 @@ def call_gpt_neox(theme, n):
             generated_text = response[0]['generated_text']
 
             # Adjusted regular expressions to correctly capture the generated spangram and words
-            spangram_match = re.search(r'Spangram:\s*([A-Za-z\s-]+)', generated_text)
-            words_match = re.search(r'Words:\s*([A-Za-z\s,-]+)', generated_text)
+            spangram_match = re.search(r'Spangram:\s*([A-Za-z-]+)', generated_text)
+            words_match = re.search(r'Words:\s*([A-Za-z,-]+)', generated_text)
             spangram = None
             words = []
             if spangram_match:
