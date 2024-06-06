@@ -48,7 +48,8 @@ def call_gpt_neox(theme, n):
         "and must describe more specifically each of the other words. Provide the spangram and words in the following format: "
         "Spangram: <spangram>, Words: <word1>, <word2>, <word3>, <word4>, <word5>, <word6>. "
         "For example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
-        "Ensure the spangram and words are clearly separated by commas and follow the exact format provided."
+        "Ensure the spangram and words are clearly separated by commas and follow the exact format provided. "
+        "Do not include any additional text or punctuation."
     )
 
     max_attempts = 5
@@ -62,9 +63,9 @@ def call_gpt_neox(theme, n):
         spangram = None
         words = []
 
-        # Use regular expressions to extract the spangram and words
-        spangram_match = re.search(r'Spangram:\s*([\w\s]+),', generated_text)
-        words_match = re.search(r'Words:\s*([\w\s,]+)', generated_text)
+        # Use refined regular expressions to extract the spangram and words
+        spangram_match = re.search(r'Spangram:\s*([\w\s]+)[,.]', generated_text)
+        words_match = re.search(r'Words:\s*([\w\s,]+)[,.]', generated_text)
 
         if spangram_match:
             spangram = spangram_match.group(1).strip()
