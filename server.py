@@ -48,9 +48,8 @@ def call_gpt_neox(theme, n):
         "Generate a spangram and a list of 6 to 8 words related to the theme. "
         "The spangram must be a single word or a hyphenated word with at least 8 characters. "
         "Provide the spangram and words in the following format: "
-        "Spangram: [spangram], Words: [word1], [word2], [word3], [word4], [word5], [word6]. "
-        "Do not include placeholders like [spangram] or [word1] in the output. "
-        "Example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle."
+        "Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle. "
+        "Ensure that the spangram and words are actual words and not placeholders."
     )
 
     max_attempts = 5
