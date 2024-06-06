@@ -46,7 +46,8 @@ def call_gpt_neox(theme, n):
         "One of these words, which we call a spangram, must be longer (but can be two words), with a length of at least 8 characters, "
         "and must describe more specifically each of the other words. Provide the spangram and words in the following format: "
         "Spangram: <spangram>, Words: <word1>, <word2>, <word3>, <word4>, <word5>, <word6>. "
-        "Ensure the spangram and words are clearly separated by commas and follow the exact format provided."
+        "Ensure the spangram and words are clearly separated by commas and follow the exact format provided. "
+        "Example: Spangram: Birdsong, Words: Cluck, Trill, Warble, Chirp, Screech, Tweet, Whistle."
     )
 
     max_attempts = 5
@@ -57,8 +58,8 @@ def call_gpt_neox(theme, n):
         generated_text = response[0]['generated_text']
 
         # Extract spangram and words from the generated text
-        spangram_match = re.search(r'Spangram:\s*([\w\s]+)[,.]', generated_text)
-        words_match = re.search(r'Words:\s*([\w\s,]+)[,.]', generated_text)
+        spangram_match = re.search(r'Spangram:\s*([^,]+),', generated_text)
+        words_match = re.search(r'Words:\s*([^,]+(?:,\s*[^,]+)*)', generated_text)
         spangram = None
         words = []
         if spangram_match:
