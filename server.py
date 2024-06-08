@@ -86,6 +86,10 @@ def call_gpt_neox(theme, n):
 
     return {"spangram": spangram, "words": words}
 
+@app.route('/')
+def home():
+    return "Welcome to the Strands Generator!"
+
 @app.route('/generate_word_set', methods=['POST'])
 def generate_word_set():
     log_to_file("Received request for /generate_word_set endpoint")
