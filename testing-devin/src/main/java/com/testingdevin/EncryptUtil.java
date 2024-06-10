@@ -36,27 +36,29 @@ public class EncryptUtil {
         byte[] decodedData = Base64.getDecoder().decode(encryptedData);
 
         logger.info("Decoded data length: " + decodedData.length);
+        logger.info("Decoded data (Base64): " + Base64.getEncoder().encodeToString(decodedData));
 
-        // Ensure the decoded data length is a multiple of 16
+        // Ensure the input length is a multiple of 16 by adding padding if necessary
         int paddingLength = 16 - (decodedData.length % 16);
-        if (paddingLength < 16) {
-            byte[] paddedData = new byte[decodedData.length + paddingLength];
-            System.arraycopy(decodedData, 0, paddedData, 0, decodedData.length);
-            for (int i = decodedData.length; i < paddedData.length; i++) {
-                paddedData[i] = (byte) paddingLength;
-            }
-            decodedData = paddedData;
-        }
+        byte[] paddedData = new byte[decodedData.length + paddingLength];
+        System.arraycopy(decodedData, 0, paddedData, 0, decodedData.length);
 
         byte[] decryptedData;
         try {
-            decryptedData = cipher.doFinal(decodedData);
+            decryptedData = cipher.doFinal(paddedData);
         } catch (Exception e) {
             logger.severe("Decryption error: " + e.getMessage());
+            logger.severe("Decoded data length: " + decodedData.length);
+            logger.severe("Decoded data (Base64): " + Base64.getEncoder().encodeToString(decodedData));
             throw e;
         }
 
-        String result = new String(decryptedData, charset);
+        // Remove padding after decryption
+        int unpaddedLength = decryptedData.length - paddingLength;
+        byte[] unpaddedData = new byte[unpaddedLength];
+        System.arraycopy(decryptedData, 0, unpaddedData, 0, unpaddedLength);
+
+        String result = new String(unpaddedData, charset);
         logger.info("Decryption successful, result: " + result);
         return result;
     }
