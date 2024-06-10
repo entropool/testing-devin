@@ -30,6 +30,9 @@ public class RedirectController {
             // Log the URL parameter before decoding
             logger.info("Received URL parameter: " + url);
 
+            // Remove any spaces from the URL parameter
+            url = url.replace(" ", "");
+
             // URL decode the encrypted URL parameter
             url = URLDecoder.decode(url, StandardCharsets.UTF_8.toString());
 

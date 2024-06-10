@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="refresh" content="0; URL='${url}'" />
 </head>
 <body>
-    <p>Redirecting to: ${url}</p>
+    <p>Redirecting to: <span th:text="${url}"></span></p>
 </body>
 </html>
