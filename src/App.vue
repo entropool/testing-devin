@@ -41,6 +41,7 @@ el-header, el-footer {
   color: #333;
   text-align: center;
   line-height: 60px;
+  padding: 20px;
 }
 
 el-aside {
@@ -48,6 +49,7 @@ el-aside {
   color: #333;
   text-align: center;
   line-height: 200px;
+  padding: 20px;
 }
 
 el-main {
@@ -55,6 +57,7 @@ el-main {
   color: #333;
   text-align: center;
   line-height: 160px;
+  padding: 20px;
 }
 
 /* Responsive Design */
@@ -74,5 +77,10 @@ el-main {
   el-main {
     line-height: 180px;
   }
+}
+
+/* New CSS class for testing */
+.test-class {
+  background-color: #ff0000;
 }
 </style>
