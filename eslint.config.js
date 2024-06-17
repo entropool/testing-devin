@@ -17,6 +17,21 @@ module.exports = [
       'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     },
   },
-  require('eslint/conf/eslint-recommended'),
-  require('eslint-plugin-vue/lib/configs/vue3-essential'),
+  {
+    files: ["*.vue"],
+    languageOptions: {
+      parser: require('vue-eslint-parser'),
+      parserOptions: {
+        parser: '@babel/eslint-parser',
+        ecmaVersion: 12,
+        sourceType: 'module',
+      },
+    },
+    plugins: {
+      vue: require('eslint-plugin-vue'),
+    },
+    rules: {
+      ...require('eslint-plugin-vue/lib/configs/vue3-essential').rules,
+    },
+  },
 ];
