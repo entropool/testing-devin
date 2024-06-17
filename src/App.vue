@@ -22,6 +22,7 @@
 <script>
 export default {
   name: 'App',
+  // This is a test comment to check if the edit command is functioning correctly.
 }
 </script>
 
