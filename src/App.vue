@@ -2,12 +2,15 @@
   <div id="app">
     <el-container>
       <el-header>
-        <h1>Header</h1>
+        <div class="logo">
+          <img src="path/to/logo.png" alt="EntroPool Logo">
+        </div>
         <nav>
           <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="#">CODE SCAN</a></li>
+            <li><a href="#">DOWNLOAD</a></li>
+            <li><a href="#">DOCUMENT</a></li>
+            <li><a href="#">SIGN IN</a></li>
           </ul>
         </nav>
       </el-header>
@@ -21,13 +24,33 @@
           </ul>
         </el-aside>
         <el-main>
-          <h2>Main Content</h2>
-          <p>This is the main content area.</p>
+          <div class="banner">
+            <h1>The AI Powered AppSec Expert</h1>
+            <h2>Unique Cyber Security Based MoE LLM</h2>
+            <button>Free Code Scan</button>
+          </div>
+          <div class="content">
+            <h2>Why Oxpecker?</h2>
+            <ul>
+              <li><i class="icon"></i> False Positive - ZERO!</li>
+              <li><i class="icon"></i> User Interaction - ZERO!</li>
+            </ul>
+          </div>
         </el-main>
       </el-container>
       <el-footer>
-        <h2>Footer</h2>
-        <p>Additional information or links can go here.</p>
+        <ul>
+          <li><a href="#">SERVICES</a></li>
+          <li><a href="#">CAREERS</a></li>
+          <li><a href="#">PARTNER</a></li>
+          <li><a href="#">ABOUT US</a></li>
+        </ul>
+        <div class="social-media">
+          <a href="#"><i class="icon-twitter"></i></a>
+          <a href="#"><i class="icon-facebook"></i></a>
+          <a href="#"><i class="icon-youtube"></i></a>
+          <a href="#"><i class="icon-linkedin"></i></a>
+        </div>
       </el-footer>
     </el-container>
   </div>
