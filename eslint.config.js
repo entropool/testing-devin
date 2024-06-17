@@ -1,7 +1,7 @@
 module.exports = [
   {
     languageOptions: {
-      globals: {
+      env: {
         node: true,
         browser: true,
         es2021: true,
