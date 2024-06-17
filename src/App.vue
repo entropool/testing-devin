@@ -15,7 +15,7 @@
         </nav>
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="150px">
           <h2>Sidebar</h2>
           <ul>
             <li><a href="#">Link 1</a></li>
@@ -150,7 +150,7 @@ button {
   background-color: #3e8ef7;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 15px 30px; /* Increased padding for better tap target */
   cursor: pointer;
   transition: background-color 0.3s;
 }
