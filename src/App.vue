@@ -77,4 +77,52 @@ el-main {
     line-height: 180px;
   }
 }
+
+/* New Styles for Improved Design */
+h1 {
+  font-size: 2.5em;
+  font-weight: bold;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: normal;
+  margin: 0;
+}
+
+el-header {
+  background-color: #3e8ef7;
+  color: white;
+}
+
+el-footer {
+  background-color: #2c3e50;
+  color: white;
+}
+
+el-aside {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+el-main {
+  background-color: #ffffff;
+  color: #333;
+  padding: 40px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  background-color: #3e8ef7;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #2c3e50;
+}
 </style>
