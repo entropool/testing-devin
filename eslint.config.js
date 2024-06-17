@@ -20,7 +20,7 @@ module.exports = [
   {
     files: ["*.vue"],
     languageOptions: {
-      parser: require('vue-eslint-parser'),
+      parser: 'vue-eslint-parser',
       parserOptions: {
         parser: '@babel/eslint-parser',
         ecmaVersion: 12,
@@ -28,10 +28,26 @@ module.exports = [
       },
     },
     plugins: {
-      vue: require('eslint-plugin-vue'),
+      vue: 'eslint-plugin-vue',
     },
     rules: {
-      ...require('eslint-plugin-vue/lib/configs/vue3-essential').rules,
+      'vue/no-unused-vars': 'error',
+      'vue/no-multiple-template-root': 'off',
+      'vue/require-default-prop': 'off',
+      'vue/require-prop-types': 'off',
+      'vue/no-v-html': 'off',
+      'vue/valid-v-slot': 'error',
+      'vue/valid-v-for': 'error',
+      'vue/valid-v-if': 'error',
+      'vue/valid-v-else-if': 'error',
+      'vue/valid-v-else': 'error',
+      'vue/valid-v-model': 'error',
+      'vue/valid-v-bind': 'error',
+      'vue/valid-v-on': 'error',
+      'vue/valid-v-show': 'error',
+      'vue/valid-v-pre': 'error',
+      'vue/valid-v-cloak': 'error',
+      'vue/valid-v-once': 'error',
     },
   },
 ];
