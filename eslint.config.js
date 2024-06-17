@@ -1,15 +1,15 @@
 module.exports = [
   {
     languageOptions: {
-      env: {
-        node: true,
-        browser: true,
-        es2021: true,
-      },
       parserOptions: {
         parser: '@babel/eslint-parser',
         ecmaVersion: 12,
         sourceType: 'module',
+      },
+      globals: {
+        node: true,
+        browser: true,
+        es2021: true,
       },
     },
     rules: {
