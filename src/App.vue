@@ -8,7 +8,7 @@
         <el-aside width="200px">
           <h2>Sidebar</h2>
         </el-aside>
-        <el-main>
+        <el-main class="test-class">
           <h2>Main Content</h2>
         </el-main>
       </el-container>
