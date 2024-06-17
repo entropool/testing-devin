@@ -3,7 +3,7 @@
     <el-container>
       <el-header>
         <div class="logo">
-          <img src="path/to/logo.png" alt="EntroPool Logo">
+          <img src="@/assets/logo.png" alt="EntroPool Logo">
         </div>
         <nav>
           <ul>
@@ -80,12 +80,22 @@ el-header, el-footer {
   padding: 20px;
 }
 
+el-footer {
+  background-color: #2c3e50; /* Different background color for visual distinction */
+  padding: 30px; /* Additional padding for better separation */
+  border-top: 2px solid #ffffff; /* Add a border for better separation */
+}
+
 el-aside {
   background-color: #f5f5f5;
   color: #333;
   text-align: center;
   line-height: 200px;
   padding: 20px;
+  height: 100vh; /* Ensure the sidebar extends the full height of the viewport */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 el-main {
