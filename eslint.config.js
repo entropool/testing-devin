@@ -6,11 +6,11 @@ module.exports = [
         browser: true,
         es2021: true,
       },
-    },
-    parserOptions: {
-      parser: '@babel/eslint-parser',
-      ecmaVersion: 12,
-      sourceType: 'module',
+      parserOptions: {
+        parser: '@babel/eslint-parser',
+        ecmaVersion: 12,
+        sourceType: 'module',
+      },
     },
     rules: {
       'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
