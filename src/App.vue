@@ -3,17 +3,31 @@
     <el-container>
       <el-header>
         <h1>Header</h1>
+        <nav>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </nav>
       </el-header>
       <el-container>
         <el-aside width="200px">
           <h2>Sidebar</h2>
+          <ul>
+            <li><a href="#">Link 1</a></li>
+            <li><a href="#">Link 2</a></li>
+            <li><a href="#">Link 3</a></li>
+          </ul>
         </el-aside>
         <el-main>
           <h2>Main Content</h2>
+          <p>This is the main content area.</p>
         </el-main>
       </el-container>
       <el-footer>
         <h2>Footer</h2>
+        <p>Additional information or links can go here.</p>
       </el-footer>
     </el-container>
   </div>
@@ -36,15 +50,15 @@ export default {
 }
 
 el-header, el-footer {
-  background-color: #b3c0d1;
-  color: #333;
+  background-color: #3e8ef7;
+  color: white;
   text-align: center;
   line-height: 60px;
   padding: 20px;
 }
 
 el-aside {
-  background-color: #d3dce6;
+  background-color: #f5f5f5;
   color: #333;
   text-align: center;
   line-height: 200px;
@@ -52,11 +66,64 @@ el-aside {
 }
 
 el-main {
-  background-color: #e9eef3;
+  background-color: #ffffff;
   color: #333;
   text-align: center;
   line-height: 160px;
-  padding: 20px;
+  padding: 40px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+nav ul li {
+  margin: 0 15px;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul li {
+  margin: 10px 0;
+}
+
+ul li a {
+  color: #333;
+  text-decoration: none;
+}
+
+ul li a:hover {
+  text-decoration: underline;
+}
+
+button {
+  background-color: #3e8ef7;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #2c3e50;
 }
 
 /* Responsive Design */
@@ -76,53 +143,5 @@ el-main {
   el-main {
     line-height: 180px;
   }
-}
-
-/* New Styles for Improved Design */
-h1 {
-  font-size: 2.5em;
-  font-weight: bold;
-  margin: 0;
-}
-
-h2 {
-  font-size: 1.5em;
-  font-weight: normal;
-  margin: 0;
-}
-
-el-header {
-  background-color: #3e8ef7;
-  color: white;
-}
-
-el-footer {
-  background-color: #2c3e50;
-  color: white;
-}
-
-el-aside {
-  background-color: #f5f5f5;
-  color: #333;
-}
-
-el-main {
-  background-color: #ffffff;
-  color: #333;
-  padding: 40px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-button {
-  background-color: #3e8ef7;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #2c3e50;
 }
 </style>
