@@ -8,7 +8,7 @@
         <el-aside width="200px">
           <h2>Sidebar</h2>
         </el-aside>
-        <el-main class="test-class">
+        <el-main>
           <h2>Main Content</h2>
         </el-main>
       </el-container>
@@ -77,10 +77,5 @@ el-main {
   el-main {
     line-height: 180px;
   }
-}
-
-/* New CSS class for testing */
-.test-class {
-  background-color: #ff0000;
 }
 </style>
