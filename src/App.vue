@@ -55,4 +55,23 @@ el-main {
   text-align: center;
   line-height: 160px;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  el-aside {
+    display: none;
+  }
+  el-main {
+    line-height: 200px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  el-aside {
+    width: 150px;
+  }
+  el-main {
+    line-height: 180px;
+  }
+}
 </style>
